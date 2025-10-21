@@ -120,10 +120,14 @@ async function scrapeAndDownload() {
 
         if (fs.existsSync(metadataPath)) {
             console.log('Found existing metadata file. Loading...');
-            const existingSongs: SongData[] = JSON.parse(
-                fs.readFileSync(metadataPath, 'utf-8')
-            );
-            existingSongs.forEach((song) => allSongs.set(song.clipId, song));
+            try {
+                const existingSongs: SongData[] = JSON.parse(
+                    fs.readFileSync(metadataPath, 'utf-8')
+                );
+                existingSongs.forEach((song) =>
+                    allSongs.set(song.clipId, song)
+                );
+            } catch (error) {}
             console.log(`Loaded ${allSongs.size} songs from file.`);
         }
 
