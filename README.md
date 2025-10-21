@@ -24,7 +24,7 @@ Run chrome using this shortcut.
 
 2. Login to Suno.com in the Chrome instance you started with remote debugging.
 
-3. Install Node.js and pnpm
+3. Install Node.js (tested on node v22.14.0) and pnpm
 4. Clone this repository
 
 5. Install dependencies and run dev server
