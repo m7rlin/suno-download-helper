@@ -8,8 +8,6 @@ You can download all YOUR created songs from Suno AI using this helper.
 
 Suno AI does not provide a way to download all your created songs at once. This tool automates the process of scrolling through your song list and downloading each song.
 
-![image](docs/chrome.png)
-
 ## Setup
 
 1. Download Chrome
@@ -18,16 +16,18 @@ On desktop right click on the chrome icon. Select propoerties and set: `"C:\Prog
 
 > Replace `<your-user>` with your actual user name.
 
+![image](docs/chrome.png)
+
 Run chrome using this shortcut.
 
 > Make sure no other chrome instance is running. If other instance is running, close them all first.
 
-2. Login to Suno.com in the Chrome instance you started with remote debugging.
+1. Login to Suno.com in the Chrome instance you started with remote debugging.
 
-3. Install Node.js (tested on node v22.14.0) and pnpm
-4. Clone this repository
+2. Install Node.js (tested on node v22.14.0) and pnpm
+3. Clone this repository
 
-5. Install dependencies and run dev server
+4. Install dependencies and run dev server
 
 ```
 pnpm install
