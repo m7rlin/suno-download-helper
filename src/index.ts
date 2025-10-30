@@ -1,4 +1,4 @@
-import puppeteer, { Browser, Page, ElementHandle } from 'puppeteer';
+import puppeteer, { Browser, Page, ElementHandle, Locator } from 'puppeteer';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -101,6 +101,39 @@ async function clickVisibleMoreButton(
     return false;
 }
 
+async function clickNextPageButton(page: Page): Promise<boolean>{
+    //for whatever reason next does not have an aria label but previous does
+    const nextButton = Locator.race([
+        page.locator('div.md\\:flex > div > div.flex-col > div button:nth-of-type(2) > svg'),
+        page.locator('::-p-xpath(//*[@id=\\"main-container\\"]/div[2]/div/div[2]/div/div[2]/div/div/div[2]/div/button[2]/svg)'),
+                page.locator(':scope >>> div.md\\:flex > div > div.flex-col > div button:nth-of-type(2) > svg')
+            ]).setTimeout(5000);
+    if (nextButton){
+        await nextButton.click();
+        return true;
+    }
+    return false;
+
+}
+
+async function clickPreviousPageButton(page: Page): Promise<boolean>{
+    const nextButton = Locator.race([
+        page.locator('::-p-aria(Previous Page) >>>> ::-p-aria([role=\\"image\\"])'),
+        page.locator('div.md\\:flex > div > div.flex-col > div button:nth-of-type(1) > svg'),
+        page.locator('::-p-xpath(//*[@id=\\"main-container\\"]/div[2]/div/div[2]/div/div[2]/div/div/div[2]/div/button[1]/svg)'),
+        page.locator(':scope >>> div.md\\:flex > div > div.flex-col > div button:nth-of-type(1) > svg')
+            ]).setTimeout(5000);
+    if (nextButton){
+        await nextButton.click();
+        return true;
+    }
+    return false;
+
+}
+
+await puppeteer.Locator.race([
+
+])
 async function scrapeAndDownload() {
     let browser: Browser | undefined;
     try {
@@ -348,9 +381,18 @@ async function scrapeAndDownload() {
                 `--- Finished processing "${song.title}". Pausing... ---`
             );
             await delay(3000);
+            console.log('--- All songs have been processed on this page. ---');
+            if (!(await clickNextPageButton(page))){
+                console.log('--- No more pages found. ---');
+            }
+            else {
+                await delay(5000);
+                await scrapeAndDownload();
+            }
+
         }
 
-        console.log('--- All songs have been processed. ---');
+       
     } catch (error) {
         console.error('A critical error occurred:', error);
     } finally {
