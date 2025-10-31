@@ -131,9 +131,7 @@ async function clickPreviousPageButton(page: Page): Promise<boolean>{
 
 }
 
-await puppeteer.Locator.race([
 
-])
 async function scrapeAndDownload() {
     let browser: Browser | undefined;
     try {
@@ -380,18 +378,18 @@ async function scrapeAndDownload() {
             console.log(
                 `--- Finished processing "${song.title}". Pausing... ---`
             );
-            await delay(3000);
-            console.log('--- All songs have been processed on this page. ---');
-            if (!(await clickNextPageButton(page))){
-                console.log('--- No more pages found. ---');
-            }
-            else {
-                await delay(5000);
-                await scrapeAndDownload();
-            }
+            
 
         }
-
+        await delay(3000);
+        console.log('--- All songs have been processed on this page. ---');
+        if (!(await clickNextPageButton(page))){
+            console.log('--- No more pages found. ---');
+        }
+        else {
+            await delay(5000);
+            await scrapeAndDownload();
+        }
        
     } catch (error) {
         console.error('A critical error occurred:', error);
