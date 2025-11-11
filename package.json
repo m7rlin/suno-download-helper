@@ -22,5 +22,9 @@
         "ts-node": "^10.9.2",
         "tsx": "^4.20.6",
         "typescript": "^5.9.3"
+    },
+    "dependencies": {
+        "@esbuild/darwin-arm64": "^0.27.0",
+        "node-fetch": "^3.3.2"
     }
 }
