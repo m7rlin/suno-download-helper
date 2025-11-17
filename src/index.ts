@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { convertWavToFlacAndAlac } from "./file_convert.js";
+import exec from "child_process";
 // Recreate __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -98,7 +99,10 @@ async function clickVisibleMoreButton(
   return false;
 }
 
-async function clickNextPageButton(page: Page): Promise<boolean> {
+async function clickNextPageButton(page: Page | undefined): Promise<boolean> {
+  if (!page) {
+    return false;
+  }
   //for whatever reason next does not have an aria label but previous does
   const nextButton = Locator.race([
     page.locator(
@@ -139,52 +143,71 @@ async function clickPreviousPageButton(page: Page): Promise<boolean> {
 }
 
 async function waitUntilDownload(
-    session: puppeteer.CDPSession,
-    fileName: string = ""
-  ): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const handler = (e: puppeteer.Protocol.Browser.DownloadProgressEvent) => {
-  
-        if (e.state === "completed") {
-          // Remove listener before resolving
-          session.off("Browser.downloadProgress", handler);
-  
-          const downloadPath = path.resolve(__dirname, "downloads","wav");
-          if (e.filePath) {
-            const originalFileName = e.filePath;
-            const newFileName = `${fileName}.wav`;
-            const newFilePath = path.join(downloadPath, newFileName);
-            fs.renameSync(originalFileName, newFilePath);
-            console.log(
-              `    ->File renamed from ${e.guid} to ${newFileName}`
-            );
-          }
-  
-          resolve(fileName);
-        } else if (e.state === "canceled") {
-          // Remove listener before rejecting
-          session.off("Browser.downloadProgress", handler);
-          reject(new Error("Download was canceled"));
-        }
-      };
-  
-      // Attach listener
-      session.on("Browser.downloadProgress", handler);
-    });
-  }
+  session: puppeteer.CDPSession,
+  fileName: string = ""
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const handler = (e: puppeteer.Protocol.Browser.DownloadProgressEvent) => {
+      if (e.state === "completed") {
+        // Remove listener before resolving
+        session.off("Browser.downloadProgress", handler);
 
+        const downloadPath = path.resolve(__dirname, "downloads", "wav");
+        if (e.filePath) {
+          const originalFileName = e.filePath;
+          const newFileName = `${fileName}.wav`;
+          const newFilePath = path.join(downloadPath, newFileName);
+          fs.renameSync(originalFileName, newFilePath);
+          console.log(`    ->File renamed from ${e.guid} to ${newFileName}`);
+        }
+
+        resolve(fileName);
+      } else if (e.state === "canceled") {
+        // Remove listener before rejecting
+        session.off("Browser.downloadProgress", handler);
+        reject(new Error("Download was canceled"));
+      }
+    };
+
+    // Attach listener
+    session.on("Browser.downloadProgress", handler);
+  });
+}
+let browser: Browser | undefined = undefined;
+let exhaustedSearch: boolean = false;
 async function scrapeAndDownload() {
-  let browser: Browser | undefined;
   try {
-    const dlDir = path.join(__dirname, "downloads","wav");
+    const dlDir = path.join(__dirname, "downloads", "wav");
     if (!fs.existsSync(dlDir)) {
       fs.mkdirSync(dlDir);
     }
-    console.log("Connecting to the browser...");
-    browser = await puppeteer.connect({ browserURL: BROWSER_URL });
-    const page = (await browser.pages()).find((p) =>
-      p.url().includes("suno.com")
-    );
+    const tmpDir = path.join(__dirname, "tmp");
+    let page: Page;
+    if (!browser) {
+      console.log("Connecting to the browser...");
+      browser = await puppeteer.launch({
+        headless: false, // Set to true for headless mode, false for visible browser
+        executablePath:
+          "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        args: ["--remote-debugging-port=9222", `--user-data-dir=${tmpDir}`],
+      });
+      // browser = await puppeteer.connect({ browserURL: BROWSER_URL });
+      // const page = (await browser.pages()).find((p) =>
+      //   p.url().includes("suno.com")
+      // );
+      page = await browser.newPage();
+      await page.goto("https://suno.com/me");
+    } else {
+      let pgTmp = (await browser.pages()).find((p) =>
+        p.url().includes("suno.com")
+      );
+      if (pgTmp) {
+        page = pgTmp;
+      } else {
+        page = await browser.newPage();
+        await page.goto("https://suno.com/me");
+      }
+    }
     if (!page) throw new Error("Could not find the target page.");
     const session = await browser.target().createCDPSession();
     await session.send("Browser.setDownloadBehavior", {
@@ -192,6 +215,8 @@ async function scrapeAndDownload() {
       downloadPath: dlDir,
       eventsEnabled: true,
     });
+    session.removeAllListeners("Browser.downloadWillBegin");
+    session.removeAllListeners("Browser.downloadProgress");
     session.on("Browser.downloadWillBegin", (event) => {
       console.log(
         `    -> Download will begin for browser guid ${event.guid} - ${event.suggestedFilename} from ${event.url}`
@@ -280,11 +305,13 @@ async function scrapeAndDownload() {
           })
           .filter((song) => song.clipId)
     );
-
+    let foundNew: boolean = false;
     // Merge discovered songs with existing data
     discoveredSongs.forEach((song) => {
       if (!allSongs.has(song.clipId)) {
         allSongs.set(song.clipId, song);
+        foundNew = true;
+        exhaustedSearch = false;
       }
     });
 
@@ -295,10 +322,24 @@ async function scrapeAndDownload() {
     );
 
     if (songsToProcess.length === 0) {
-      console.log(
-        "All discovered songs have already been downloaded. Exiting."
-      );
-      return;
+      if (exhaustedSearch) {
+        console.log(
+          "All discovered songs have already been downloaded. Exiting."
+        );
+        return;
+      } else {
+        exhaustedSearch = true;
+      }
+
+      if (!(await clickNextPageButton(page))) {
+        console.log("--- All songs discoverd. No more pages found. ---");
+        return;
+      } else {
+        console.log("Moving to next page");
+        await delay(5000);
+        session.detach();
+        await scrapeAndDownload();
+      }
     }
 
     console.log(
@@ -318,7 +359,7 @@ async function scrapeAndDownload() {
 
       const songRow = await scrollSongIntoView(
         page,
-        scrollContainer,
+        scrollContainer as ElementHandle<HTMLDivElement>,
         song.clipId
       );
       if (!songRow) {
@@ -369,23 +410,26 @@ async function scrapeAndDownload() {
 
       // --- WAV Download ---
       if (songObject.wavStatus !== "DOWNLOADED") {
-        
         try {
           console.log("  -> Downloading WAV...");
           const checkForExistDialog =
             "xpath///span[contains(text(), 'Download WAV Audio')]";
           let existDialog = await page.$(checkForExistDialog);
-          if (existDialog){
-            const findModalCloseSearch='button[aria-label="Close"]:not(.chakra-popover__close-btn)'
+          if (existDialog) {
+            const findModalCloseSearch =
+              'button[aria-label="Close"]:not(.chakra-popover__close-btn)';
             let modalClose = await page.$(findModalCloseSearch);
-            if (modalClose){
-                modalClose.click();
-                console.log(`Closing stuck modal`);
+            if (modalClose) {
+              modalClose.click();
+              console.log(`Closing stuck modal`);
             }
-
           }
-        
-          await scrollSongIntoView(page, scrollContainer, song.clipId); // Re-center element
+
+          await scrollSongIntoView(
+            page,
+            scrollContainer as ElementHandle<HTMLDivElement>,
+            song.clipId
+          ); // Re-center element
           await page.keyboard.press("Escape");
           await delay(200);
 
@@ -394,14 +438,23 @@ async function scrapeAndDownload() {
 
           const downloadMenuItemWav = await page.waitForSelector(
             "xpath///button[.//span[text()='Download']]",
-            { visible: true, timeout: 5000 }
+            { visible: true, timeout: 10000 }
           );
-          await downloadMenuItemWav.hover();
+          if (downloadMenuItemWav) {
+            await downloadMenuItemWav.hover();
+          } else {
+            throw `Could not find download download menu item - wav for ${song.clipId}`;
+          }
+
           const wavButton = await page.waitForSelector(
             'button[aria-label="WAV Audio"]',
-            { visible: true, timeout: 5000 }
+            { visible: true, timeout: 10000 }
           );
-          await wavButton.click();
+          if (wavButton) {
+            await wavButton.click();
+          } else {
+            throw `Could not find download wav button for ${song.clipId}`;
+          }
 
           const modalTitleXPath =
             "xpath///span[contains(text(), 'Download WAV Audio')]";
@@ -418,7 +471,12 @@ async function scrapeAndDownload() {
             readyDownloadButtonSelector,
             { timeout: 60000 }
           );
-          await downloadButtonElement.click();
+          if (downloadButtonElement) {
+            await downloadButtonElement.click();
+          } else {
+            throw `Could not find download button element for ${song.clipId}`;
+          }
+
           await waitUntilDownload(session, songObject.clipId);
           await page.waitForFunction(
             (xpath) =>
@@ -436,7 +494,6 @@ async function scrapeAndDownload() {
           songObject.wavStatus = "DOWNLOADED";
           console.log("  -> WAV download successful.");
           convertWavToFlacAndAlac(songObject);
-
         } catch (e: any) {
           console.error(`  -> WAV download FAILED: ${e.message}`);
           songObject.wavStatus = "FAILED";
@@ -453,6 +510,7 @@ async function scrapeAndDownload() {
       console.log("--- No more pages found. ---");
     } else {
       await delay(5000);
+      session.detach();
       await scrapeAndDownload();
     }
   } catch (error) {

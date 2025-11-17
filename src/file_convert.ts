@@ -66,7 +66,7 @@ export async function convertWavToFlacAndAlac(
 
     const imageResponse = await fetch(imageUrl);
     if (!imageResponse.ok) {
-      console.log(`      ->  Failed to fetch image: ${imageResponse.statusText}`);
+      console.log(`      ->  Failed to fetch image: ${imageResponse.statusText} (${imageUrl})`);
     } else {
       const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
       //@ts-ignore
