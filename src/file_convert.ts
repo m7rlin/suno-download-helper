@@ -3,15 +3,13 @@ import { promisify } from "util";
 import fetch from "node-fetch";
 import * as path from "path";
 import * as fs from "fs";
-import type { SongData } from "./index.js";
-import { fileURLToPath } from "url";
+import type { ISongData } from "./ISongData.js";
 const asyncCopyFile = promisify(fs.copyFile);
 const asyncDeleteFile = promisify(fs.rm);
 const execFileAsync = promisify(execFile);
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
 export async function convertWavToFlacAndAlac(
-  metadata: SongData
+  metadata: ISongData
 ): Promise<{ flac: string; alac: string; wav: string }> {
   const songId = metadata.clipId;
   const imageDlDir = path.join(__dirname, "downloads", "images");
@@ -225,7 +223,7 @@ export function escapeFfmpegMetadata(value: string | null): string {
   return escaped;
 }
 
-function createMetaDataArgs(metadata: SongData, parsley: boolean): string[] {
+function createMetaDataArgs(metadata: ISongData, parsley: boolean): string[] {
   const rawArgs = [
     "-metadata",
     `title=${escapeFfmpegMetadata(metadata.title)}`,

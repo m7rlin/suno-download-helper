@@ -1,35 +1,15 @@
-import puppeteer, { Browser, Page, ElementHandle, Locator } from "puppeteer";
+import * as puppeteer from "puppeteer";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
-import { convertWavToFlacAndAlac } from "./file_convert.js";
-import exec from "child_process";
-// Recreate __dirname for ES Modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { convertWavToFlacAndAlac } from "./file_convert";
+import { ISongData } from "./ISongData";
+import { TDownloadStatus } from "./TDownloadStatus";
 
-// The websocket URL for your running Chrome instance
-const BROWSER_URL = "http://127.0.0.1:9222";
-
-type DownloadStatus = "PENDING" | "DOWNLOADED" | "FAILED" | "SKIPPED";
 
 // A helper function for creating pauses
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-export interface SongData {
-  title: string | null;
-  clipId: string;
-  style: string | null;
-  thumbnail: string | null;
-  model: string | null;
-  duration: string | null;
-  mp3Status: DownloadStatus;
-  wavStatus: DownloadStatus;
-  songUrl: string;
-  liked: boolean;
-}
-
-function saveSongsMetadata(songs: Map<string, SongData>) {
+function saveSongsMetadata(songs: Map<string, ISongData>) {
   const songsDir = path.join(__dirname, "songs");
   if (!fs.existsSync(songsDir)) fs.mkdirSync(songsDir, { recursive: true });
   const metadataPath = path.join(songsDir, "songs_metadata.json");
@@ -38,10 +18,10 @@ function saveSongsMetadata(songs: Map<string, SongData>) {
 }
 
 async function scrollSongIntoView(
-  page: Page,
-  scrollContainer: ElementHandle<HTMLDivElement>,
+  page: puppeteer.Page,
+  scrollContainer: puppeteer.ElementHandle<HTMLDivElement>,
   clipId: string
-): Promise<ElementHandle | null> {
+): Promise<puppeteer.ElementHandle | null> {
   const songSelector = `div[data-clip-id="${clipId}"]`;
   let songRow = await scrollContainer.$(songSelector);
 
@@ -83,7 +63,7 @@ async function scrollSongIntoView(
 }
 
 async function clickVisibleMoreButton(
-  page: Page,
+  page: puppeteer.Page,
   clipId: string
 ): Promise<boolean> {
   const moreButtonSelector = `div[data-clip-id="${clipId}"] button[aria-label="More menu contents"]`;
@@ -99,12 +79,12 @@ async function clickVisibleMoreButton(
   return false;
 }
 
-async function clickNextPageButton(page: Page | undefined): Promise<boolean> {
+async function clickNextPageButton(page: puppeteer.Page | undefined): Promise<boolean> {
   if (!page) {
     return false;
   }
   //for whatever reason next does not have an aria label but previous does
-  const nextButton = Locator.race([
+  const nextButton = puppeteer.Locator.race([
     page.locator(
       "div.md\\:flex > div > div.flex-col > div button:nth-of-type(2) > svg"
     ),
@@ -122,8 +102,8 @@ async function clickNextPageButton(page: Page | undefined): Promise<boolean> {
   return false;
 }
 
-async function clickPreviousPageButton(page: Page): Promise<boolean> {
-  const nextButton = Locator.race([
+async function clickPreviousPageButton(page: puppeteer.Page): Promise<boolean> {
+  const nextButton = puppeteer.Locator.race([
     page.locator('::-p-aria(Previous Page) >>>> ::-p-aria([role=\\"image\\"])'),
     page.locator(
       "div.md\\:flex > div > div.flex-col > div button:nth-of-type(1) > svg"
@@ -173,7 +153,7 @@ async function waitUntilDownload(
     session.on("Browser.downloadProgress", handler);
   });
 }
-let browser: Browser | undefined = undefined;
+let browser: puppeteer.Browser | undefined = undefined;
 let exhaustedSearch: boolean = false;
 async function scrapeAndDownload() {
   try {
@@ -182,7 +162,7 @@ async function scrapeAndDownload() {
       fs.mkdirSync(dlDir);
     }
     const tmpDir = path.join(__dirname, "tmp");
-    let page: Page;
+    let page: puppeteer.Page;
     if (!browser) {
       console.log("Connecting to the browser...");
       browser = await puppeteer.launch({
@@ -234,14 +214,14 @@ async function scrapeAndDownload() {
     console.log(`Successfully connected to page: ${page.url()}`);
 
     // --- LOAD AND PREPARE DATA ---
-    const allSongs = new Map<string, SongData>();
+    const allSongs = new Map<string, ISongData>();
     const songsDir = path.join(__dirname, "songs");
     const metadataPath = path.join(songsDir, "songs_metadata.json");
 
     if (fs.existsSync(metadataPath)) {
       console.log("Found existing metadata file. Loading...");
       try {
-        const existingSongs: SongData[] = JSON.parse(
+        const existingSongs: ISongData[] = JSON.parse(
           fs.readFileSync(metadataPath, "utf-8")
         );
         existingSongs.forEach((song) => allSongs.set(song.clipId, song));
@@ -261,7 +241,7 @@ async function scrapeAndDownload() {
     console.log("Successfully identified the nested scroll container.");
 
     // Scrape page for all songs to discover new ones
-    const discoveredSongs: SongData[] = await page.$$eval(
+    const discoveredSongs: ISongData[] = await page.$$eval(
       'div[data-testid="song-row"]',
       (rows) =>
         rows
@@ -298,8 +278,8 @@ async function scrapeAndDownload() {
               thumbnail,
               model,
               duration,
-              mp3Status: "DOWNLOADED" as DownloadStatus,
-              wavStatus: "PENDING" as DownloadStatus,
+              mp3Status: "DOWNLOADED" as TDownloadStatus,
+              wavStatus: "PENDING" as TDownloadStatus,
               liked: liked,
             };
           })
@@ -359,7 +339,7 @@ async function scrapeAndDownload() {
 
       const songRow = await scrollSongIntoView(
         page,
-        scrollContainer as ElementHandle<HTMLDivElement>,
+        scrollContainer as puppeteer.ElementHandle<HTMLDivElement>,
         song.clipId
       );
       if (!songRow) {
@@ -427,7 +407,7 @@ async function scrapeAndDownload() {
 
           await scrollSongIntoView(
             page,
-            scrollContainer as ElementHandle<HTMLDivElement>,
+            scrollContainer as puppeteer.ElementHandle<HTMLDivElement>,
             song.clipId
           ); // Re-center element
           await page.keyboard.press("Escape");
