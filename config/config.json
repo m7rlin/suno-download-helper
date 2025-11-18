@@ -3,7 +3,7 @@
   "audioFormats": ["flac", "alac", "wav", "mp3"],
   "saveImages": true,
   "saveMetadataJSON": true,
-  "metadataJsonFile": "~/songs_metadata.json",
+  "combinedSongsMetadataJsonFile": "~/songs_metadata.json",
   "embedMetadataInCovertedFiles": true,
   "embedImagesInConvertedFiles": true,
   "deleteImagesAfterEmbedding": true,
