@@ -1,0 +1,41 @@
+<button type="button" aria-label="Playbar: Like" tabindex="0" data-react-aria-pressable="true"
+    class="relative inline-block font-sans font-medium text-center before:absolute before:inset-0 before:pointer-events-none before:rounded-[inherit] before:border before:border-transparent before:bg-transparent after:absolute after:inset-0 after:pointer-events-none after:rounded-[inherit] after:bg-transparent after:opacity-0 enabled:hover:after:opacity-100 transition duration-75 before:transition before:duration-75 after:transition after:duration-75 select-none cursor-pointer text-sm leading-[24px] rounded-md aspect-square p-0.5 bg-transparent enabled:hover:before:bg-overlay-on-primary text-foreground-inactive disabled:after:bg-background-primary disabled:after:opacity-50">
+    <span class="relative flex flex-row items-center justify-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
+            fill="currentColor" class="text-current shrink-0 w-4 h-4 m-1">
+            <g>
+                <path
+                    d="M18.881 8.288q.648 0 1.133.494.486.495.486 1.154v1.648a1.7 1.7 0 0 1-.121.618l-2.429 5.81a1.66 1.66 0 0 1-.607.7q-.425.288-.89.288H9.975q-.668 0-1.143-.484a1.6 1.6 0 0 1-.476-1.164V8.968q0-.33.132-.629.13-.299.354-.525l4.392-4.45a1.3 1.3 0 0 1 1.517-.206q.385.207.557.577.172.371.07.762l-.91 3.79zM5.119 19q-.668 0-1.143-.484a1.6 1.6 0 0 1-.476-1.164V9.936q0-.68.476-1.164a1.55 1.55 0 0 1 1.143-.484q.667 0 1.144.484.475.484.475 1.164v7.416q0 .68-.476 1.164A1.55 1.55 0 0 1 5.12 19"></path>
+            </g>
+        </svg>
+    </span>
+</button>
+
+
+<button type="button" aria-label="Playbar: Like" tabindex="0" data-react-aria-pressable="true"
+    class="relative inline-block font-sans font-medium text-center before:absolute before:inset-0 before:pointer-events-none before:rounded-[inherit] before:border before:border-transparent before:bg-transparent after:absolute after:inset-0 after:pointer-events-none after:rounded-[inherit] after:bg-transparent after:opacity-0 enabled:hover:after:opacity-100 transition duration-75 before:transition before:duration-75 after:transition after:duration-75 select-none cursor-pointer text-sm leading-[24px] rounded-md aspect-square p-0.5 text-foreground-primary bg-transparent enabled:hover:before:bg-overlay-on-primary disabled:after:bg-background-primary disabled:after:opacity-50">
+    <span class="relative flex flex-row items-center justify-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
+            fill="currentColor" class="text-current shrink-0 w-4 h-4 m-1">
+            <g>
+                <path
+                    d="M18.881 8.288q.648 0 1.133.494.486.495.486 1.154v1.648a1.7 1.7 0 0 1-.121.618l-2.429 5.81a1.66 1.66 0 0 1-.607.7q-.425.288-.89.288H9.975q-.668 0-1.143-.484a1.6 1.6 0 0 1-.476-1.164V8.968q0-.33.132-.629.13-.299.354-.525l4.392-4.45a1.3 1.3 0 0 1 1.517-.206q.385.207.557.577.172.371.07.762l-.91 3.79zM5.119 19q-.668 0-1.143-.484a1.6 1.6 0 0 1-.476-1.164V9.936q0-.68.476-1.164a1.55 1.55 0 0 1 1.143-.484q.667 0 1.144.484.475.484.475 1.164v7.416q0 .68-.476 1.164A1.55 1.55 0 0 1 5.12 19"></path>
+            </g>
+        </svg>
+    </span>
+</button>
+
+
+<span class="pt-6 font-serif font-light whitespace-pre text-2xl">Download WAV Audio</span>
+
+<button type="button" aria-label="Close" class="relative inline-block font-sans font-medium text-center before:absolute before:inset-0 before:pointer-events-none before:rounded-[inherit] before:border before:border-transparent before:bg-transparent after:absolute after:inset-0 after:pointer-events-none after:rounded-[inherit] after:bg-transparent after:opacity-0 enabled:hover:after:opacity-100 transition duration-75 before:transition before:duration-75 after:transition after:duration-75 select-none cursor-pointer text-[17px] leading-[24px] rounded-full aspect-square p-2.5 text-foreground-primary bg-background-tertiary enabled:hover:before:bg-overlay-on-primary disabled:after:bg-background-primary disabled:after:opacity-50"><span class="relative flex flex-row items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" class="text-current shrink-0 w-4 h-4 m-1"><g><path d="m12 13.49-5.217 5.217a1 1 0 0 1-.745.293 1 1 0 0 1-.745-.293A1 1 0 0 1 5 17.962q0-.453.293-.745L10.509 12 5.293 6.783A1 1 0 0 1 5 6.038q0-.453.293-.745A1 1 0 0 1 6.038 5q.453 0 .745.293L12 10.509l5.217-5.216A1 1 0 0 1 17.962 5q.453 0 .745.293.293.292.293.745t-.293.745L13.491 12l5.216 5.217q.293.292.293.745t-.293.745a1 1 0 0 1-.745.293 1 1 0 0 1-.745-.293z"></path></g></svg></span></button>
+
+
+body > div.modal-class.modal-overlay.fixed.inset-0.flex.h-screen.items-center.justify-center.overflow-y-auto.bg-black\/60.z-\[100000\].px-4 > div > div.absolute.top-4.right-4 > button
+
+/html/body/div[7]/div/div[1]/button
+/html/body/div[7]/div/div[1]/button
+
+
+
+<button type="button" aria-label="Close" class="chakra-popover__close-btn css-1o8qips"><svg viewBox="0 0 24 24" focusable="false" class="chakra-icon css-onkibi" aria-hidden="true"><path fill="currentColor" d="M.439,21.44a1.5,1.5,0,0,0,2.122,2.121L11.823,14.3a.25.25,0,0,1,.354,0l9.262,9.263a1.5,1.5,0,1,0,2.122-2.121L14.3,12.177a.25.25,0,0,1,0-.354l9.263-9.262A1.5,1.5,0,0,0,21.439.44L12.177,9.7a.25.25,0,0,1-.354,0L2.561.44A1.5,1.5,0,0,0,.439,2.561L9.7,11.823a.25.25,0,0,1,0,.354Z"></path></svg></button>

@@ -1,0 +1,51 @@
+Cover of....
+/html/body/div[2]/div[1]/div[2]/div[1]/div/div[3]/div/div/div[1]/div[2]/div[4]/div
+<div>
+    <div
+        class="bg-background-secondary rounded-md px-3 py-2 font-sans hover:bg-background-secondary m-4 mb-2 mt-3 ">
+        <div class="text-xs">
+            <div class="flex flex-row">
+                <div class="relative h-[41px] w-[30px] overflow-hidden">
+                    <img alt="Song Image"
+                        data-src="https://cdn2.suno.ai/image_large_553d1906-3721-484b-b97f-275d4824a011.jpeg"
+                        class="h-[41px] w-[30px] shrink-0 rounded-sm object-cover"
+                        src="https://cdn2.suno.ai/image_553d1906-3721-484b-b97f-275d4824a011.jpeg">
+                    <button
+                        class="flex items-center justify-center rounded-full p-4 bg-background-primary/60 backdrop-blur-xl border-none outline-none absolute top-1/2 left-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 transform duration-300 scale-75 opacity-0">
+                        <svg width="1em" height="1em" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5">
+                            <path
+                                d="M6 18.704V5.296c0-.368.138-.675.415-.924.276-.248.599-.372.968-.372.115 0 .236.016.363.049.126.032.247.08.363.145L19.378 10.9a1.285 1.285 0 010 2.202l-11.27 6.705a1.494 1.494 0 01-.725.194c-.369 0-.692-.124-.968-.372A1.19 1.19 0 016 18.704z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex flex-1 items-center overflow-hidden pl-3">
+                    <div class="w-full">
+                        <div class="font-sans text-[14px] leading-[16px] font-semibold">Cover of</div>
+                        <div class="overflow-hidden text-[14px] hover:underline">
+                            <a href="/song/553d1906-3721-484b-b97f-275d4824a011">
+                                <span class="block truncate">Grey</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center self-center">
+                    <div class="relative">
+                        <button type="button" data-button-id="«r1ot»" data-mouseover-id="«r1os»"
+                            data-context-menu-trigger="true" aria-label="More menu contents"
+                            class="relative inline-block font-sans font-medium text-center before:absolute before:inset-0 before:pointer-events-none before:rounded-[inherit] before:border before:border-transparent before:bg-transparent after:absolute after:inset-0 after:pointer-events-none after:rounded-[inherit] after:bg-transparent after:opacity-0 enabled:hover:after:opacity-100 transition duration-75 before:transition before:duration-75 after:transition after:duration-75 select-none cursor-pointer text-sm leading-[24px] rounded-md aspect-square p-0.5 text-foreground-primary bg-transparent enabled:hover:before:bg-overlay-on-primary disabled:after:bg-background-primary disabled:after:opacity-50">
+                            <span class="relative flex flex-row items-center justify-center gap-1">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                    class="text-current shrink-0 w-4 h-4 m-1">
+                                    <path
+                                        d="M10 6c0-.55.196-1.02.588-1.412A1.926 1.926 0 0112 4c.55 0 1.02.196 1.412.588.392.391.588.862.588 1.412 0 .55-.196 1.02-.588 1.412A1.926 1.926 0 0112 8c-.55 0-1.02-.196-1.412-.588A1.926 1.926 0 0110 6zm0 6c0-.55.196-1.02.588-1.412A1.926 1.926 0 0112 10c.55 0 1.02.196 1.412.588.392.391.588.862.588 1.412 0 .55-.196 1.02-.588 1.412A1.926 1.926 0 0112 14c-.55 0-1.02-.196-1.412-.588A1.926 1.926 0 0110 12zm0 6c0-.55.196-1.02.588-1.413A1.926 1.926 0 0112 16c.55 0 1.02.196 1.412.587.392.392.588.863.588 1.413s-.196 1.02-.588 1.413A1.926 1.926 0 0112 20c-.55 0-1.02-.196-1.412-.587A1.926 1.926 0 0110 18z"></path>
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

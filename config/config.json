@@ -1,0 +1,20 @@
+{
+  "downloadRootDirectory": "~/downloads/suno",
+  "audioFormats": ["flac", "alac", "wav", "mp3"],
+  "saveImages": true,
+  "saveMetadataJSON": true,
+  "combinedSongsMetadataJsonFile": "~/songs_metadata.json",
+  "embedMetadataInCovertedFiles": true,
+  "embedImagesInConvertedFiles": true,
+  "deleteImagesAfterEmbedding": true,
+  "useSongTitleInFilenames": false,
+  "chromeExecutablePath": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "chromeTempUserDataDir": "~/tmp/suno-chrome-user-data",
+  "copyDownloadsToOtherLocation": [
+    {
+      "formats": ["flac", "alac", "wav", "mp3"],
+      "directory": "~/music/suno/${format}",
+      "retainOriginalFile": false
+    }
+  ]
+}

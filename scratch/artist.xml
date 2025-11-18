@@ -1,0 +1,16 @@
+/html/body/div[2]/div[1]/div[2]/div[1]/div/div[3]/div/div/div[1]/div[2]/div[2]/div[1]
+
+<div class="flex items-center gap-4">
+    <div
+        class="flex w-fit flex-row items-center gap-2 font-sans text-sm font-medium text-foreground-primary">
+        <div class="relative h-8 shrink-0 aspect-square">
+            <a class="hover:underline relative z-10 block aspect-square h-full" href="/@galesio">
+                <img alt="Profile avatar" data-src="https://cdn1.suno.ai/a3f9c717.webp"
+                    class="rounded-full h-full w-full object-cover p-1"
+                    src="https://cdn1.suno.ai/a3f9c717.webp">
+            </a>
+        </div>
+        <a class="hover:underline line-clamp-1 max-w-fit break-all" title="GalesIO" href="/@galesio">
+            GalesIO</a>
+    </div>
+</div>
